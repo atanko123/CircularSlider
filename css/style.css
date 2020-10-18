@@ -1,0 +1,26 @@
+ul {
+	list-style-type: none;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.value {
+	font-weight: bold;
+	font-size: 6vh;
+	margin-right: 15px;
+}
+
+.square {
+	height: 1.3vh;
+	width: 2vh;
+	background-color: red;
+	display: inline-block;
+	margin-right: 15px;
+}
+
+
+#page {
+	width: 70%;
+	height: 100%;
+	margin: auto;
+	background-image: linear-gradient( #fafafa, #dedede);
+}
