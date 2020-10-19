@@ -72,8 +72,10 @@ CircularSlider.prototype._initSlider = function() {
         container.appendChild(this.rootSVG);
     }
     this.filledCircle = this._initFilledCircle();
+    this.sliderCircle = this._initSlideCircle();
     this.rootSVG.appendChild(this._initEmptyTemplate());
     this.rootSVG.appendChild(this.filledCircle);
+    this.rootSVG.appendChild(this.sliderCircle);
 }
 
 CircularSlider.prototype._createRootSVG = function(container) {
@@ -99,6 +101,19 @@ CircularSlider.prototype._initEmptyTemplate = function() {
     cs.style.strokeWidth = STROKE_WIDTH + "px";
     cs.setAttributeNS(null, 'transform', 'rotate(-90)');
     cs.style.strokeDasharray = "4, 1.5";
+
+    //console.log("_initEmptyTemplate:", cs);
+    return cs;
+}
+
+CircularSlider.prototype._initSlideCircle = function() {
+    const cs = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    cs.setAttributeNS(null, "fill", "white");
+    cs.setAttributeNS(null, "cx", this.options.radius - STROKE_WIDTH / 2);
+    cs.setAttributeNS(null, "cy", 0);
+    cs.setAttributeNS(null, "r", 10);
+    cs.style.stroke = "	#A8A8A8";
+    cs.setAttributeNS(null, 'transform', 'rotate(-90)');
 
     //console.log("_initEmptyTemplate:", cs);
     return cs;
