@@ -1,11 +1,11 @@
 const OptionsCircularSlider =
-	function(containter,
+	function(container,
 		     color,
 		     minValue,
 		     maxValue,
 		     step,
 		     radius) {
-		this.containter = containter;
+		this.container = container;
 		this.color = color;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
