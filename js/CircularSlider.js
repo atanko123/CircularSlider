@@ -7,11 +7,17 @@
 	radius
 */
 
-const CircularSlider = function(options) {
-	this._checkOptions(options);
-	this.options = options;
-	
-	this.currentStep = 0;
+class CircularSlider {
+	constructor(options) {
+		this._checkOptions(options);
+		this.options = options;
+
+		this.currentStep = 0;
+	}
+
+	get getColor() {
+		return this.options.color;
+	}
 }
 
 CircularSlider.prototype.updateCurrentStep = function(newStep) {
@@ -29,10 +35,6 @@ CircularSlider.prototype.getFormatedValue = function(newStep) {
 		this.updateCurrentStep(newStep);
 	}
 	return "$" + (this.currentStep * this.options.step);
-}
-
-CircularSlider.prototype.getColor = function() {
-	return this.options.color;
 }
 
 
