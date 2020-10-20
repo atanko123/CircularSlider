@@ -160,14 +160,16 @@ CircularSlider.prototype._fillSlider = function(fill) {
 	const newFill = this.currentStep * this.stepSize;
 	const step = this.sliderSize / 500;
 	const isMore = newFill > oldFill;
+	this._colorSliderCircle(true);
 	const animation = setInterval(() => {
 		oldFill = isMore ? oldFill + step : oldFill - step;
 		if (this.between(oldFill, newFill, 10)) {
 			oldFill = newFill;
+			this._colorSliderCircle(false);
 			clearInterval(animation);
 		}
 		this._colorSlider(oldFill, this.sliderSize - oldFill);
-	 }, 2);
+	 }, 5);
 	
 }
 
@@ -245,7 +247,7 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 CircularSlider.prototype._handleMouseDown = function(e) {
 	e.preventDefault();
 	this.isDragging = true;
-	this.sliderCircle.setAttributeNS(null, "fill", this.getColor);
+	this._colorSliderCircle(true);
 
 }
 
@@ -253,7 +255,7 @@ CircularSlider.prototype._cancelMouseDrag = function(e) {
 	e.preventDefault();
 	if (this.isDragging) {
 		this.isDragging = false;
-		this.sliderCircle.setAttributeNS(null, "fill", "white");
+		this._colorSliderCircle(false);
 		this._getNewStep(this.sliderX, this.sliderY);
 	}
 	this.isDragging = false;
@@ -287,4 +289,9 @@ CircularSlider.prototype._transformToLocal = function(svg, e) {
     svg.x = e.clientX;
     svg.y = e.clientY;
     return svg.matrixTransform(this.rootSVG.getScreenCTM().inverse());
+}
+
+CircularSlider.prototype._colorSliderCircle = function(moving) {
+	const color = moving ? this.getColor : "white";
+	this.sliderCircle.setAttributeNS(null, "fill", color);
 }
