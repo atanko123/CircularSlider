@@ -7,6 +7,7 @@
 	radius
 */
 const STROKE_WIDTH = 15;
+const SVG_URL = "http://www.w3.org/2000/svg";
 
 class CircularSlider {
 
@@ -26,6 +27,7 @@ class CircularSlider {
 		return this.currentStep;
 	}
 
+	// $value
 	get getFormatedValue() {
 		return "$" + (this.options.minValue + this.currentStep * this.options.step);
 	}
@@ -64,7 +66,6 @@ CircularSlider.prototype._checkOptions = function(options) {
 CircularSlider.prototype._initSlider = function() {
 	this.d = this.options.radius - (STROKE_WIDTH / 2);
     const container = document.getElementById(this.options.container);
-    // create root svg only when the first slider is added to the container.
     this.rootSVG = document.getElementById("slidersSVG");
     if (this.rootSVG === null) {
         this.rootSVG = this._createRootSVG(container);
@@ -78,7 +79,7 @@ CircularSlider.prototype._initSlider = function() {
 }
 
 CircularSlider.prototype._createRootSVG = function(container) {
-    const elSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const elSVG = document.createElementNS(SVG_URL, "svg");
     const width = container.offsetWidth;
 
     elSVG.setAttributeNS(null, "id", "slidersSVG");
@@ -86,37 +87,33 @@ CircularSlider.prototype._createRootSVG = function(container) {
     elSVG.setAttributeNS(null, "height", width);
     elSVG.setAttributeNS(null, "viewBox", "-200 -200 400 400");
 
-    //console.log("_createRootSVG", elSVG);
     return elSVG;
 }
 
+CircularSlider.prototype._initCircle = function(r, fill) {
+	const cs = document.createElementNS(SVG_URL, "circle");
+	cs.setAttributeNS(null, "cx", 0);
+	cs.setAttributeNS(null, "cy", 0);
+	cs.setAttributeNS(null, "r", r);
+	cs.setAttributeNS(null, "fill", fill);
+	cs.setAttributeNS(null, 'transform', 'rotate(-90)');
+
+	return cs;
+}
+
 CircularSlider.prototype._initEmptyTemplate = function() {
-    const cs = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    cs.setAttributeNS(null, "fill", "none")
-    cs.setAttributeNS(null, "cx", 0);
-    cs.setAttributeNS(null, "cy", 0);
-    cs.setAttributeNS(null, "r", this.d);
+    const cs = this._initCircle(this.d, "none");
     cs.style.stroke = "#C8C8C8";
     cs.style.strokeWidth = STROKE_WIDTH + "px";
-    cs.setAttributeNS(null, 'transform', 'rotate(-90)');
     cs.style.strokeDasharray = "4, 1.5";
 
-    //console.log("_initEmptyTemplate:", cs);
     return cs;
 }
 
 CircularSlider.prototype._initSlideCircle = function() {
-    const cs = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    cs.setAttributeNS(null, "fill", "white");
-    cs.setAttributeNS(null, "cx", this.options.radius - STROKE_WIDTH / 2);
-    cs.setAttributeNS(null, "cy", 0);
-    cs.setAttributeNS(null, "r", 10);
+    const cs = this._initCircle(10, "white");
     cs.style.stroke = "	#A8A8A8";
-    cs.setAttributeNS(null, 'transform', 'rotate(-90)');
-    this.sliderX = 0;
-    this.sliderY = 0;
 
-    //console.log("_initEmptyTemplate:", cs);
     return cs;
 }
 
@@ -124,18 +121,11 @@ CircularSlider.prototype._initFilledCircle = function() {
 	this.sliderSize = 2 * Math.PI * (this.options.radius - STROKE_WIDTH / 2);
 	const totalSteps =  (this.options.maxValue - this.options.minValue) / this.options.step;
 	this.stepSize = this.sliderSize / totalSteps;
-    const cs = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    cs.setAttributeNS(null, "fill", "none")
-    cs.setAttributeNS(null, "cx", 0);
-    cs.setAttributeNS(null, "cy", 0);
-    cs.setAttributeNS(null, "r", this.d);
+
+    const cs = this._initCircle(this.d, "none");
     cs.style.stroke = this.getColor;
     cs.style.strokeWidth = STROKE_WIDTH + "px";
-    cs.setAttributeNS(null, 'transform', 'rotate(-90)');
-    cs.setAttributeNS(null, 'stroke-dasharray', `${this.sliderSize} ${this.sliderSize}`);
-    cs.setAttributeNS(null, 'stroke-dashoffset', `${this.sliderSize}`);
 
-    //console.log("_initFilledCircle:", cs);
     return cs;
 }
 
@@ -143,15 +133,14 @@ CircularSlider.prototype._fillSlider = function() {
 	const fill = this.currentStep * this.stepSize;
 	const empty = this.sliderSize - fill;
 	this.filledCircle.setAttributeNS(null, 'stroke-dasharray', `${fill} ${empty}`);
+	// Change position of white dot based on filled circle
 	this._positionSliderCircle(fill / this.sliderSize);
 }
 
 CircularSlider.prototype._positionSliderCircle = function(portion) {
-	const radians = portion * 2 * Math.PI;
+	const radians = 2 * Math.PI * portion; // 2PI radians = 360 degrees
 	const x =  Math.cos(radians) * (this.options.radius - STROKE_WIDTH / 2);
 	const y =  Math.sin(radians) * (this.options.radius - STROKE_WIDTH / 2);
-	//console.log("[x, y]", x, y);
-
 	this.sliderCircle.setAttributeNS(null, "cx", x);
 	this.sliderCircle.setAttributeNS(null, "cy", y);
 }
