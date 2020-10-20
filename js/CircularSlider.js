@@ -15,11 +15,15 @@ class CircularSlider {
 		this.options = options;
 
 		this.currentStep = 0;
-		this._initCircularSliders();
+		this._initSlider();
 	}
 
 	get getColor() {
 		return this.options.color;
+	}
+
+	get getCurrentStep() {
+		return this.currentStep;
 	}
 
 	get getFormatedValue() {
@@ -57,13 +61,8 @@ CircularSlider.prototype._checkOptions = function(options) {
   	}
 }
 
-CircularSlider.prototype._initCircularSliders = function() {
-    this.d = this.options.radius - (STROKE_WIDTH / 2);
-    console.log("d", this.d);
-    this._initSlider();
-}
-
 CircularSlider.prototype._initSlider = function() {
+	this.d = this.options.radius - (STROKE_WIDTH / 2);
     const container = document.getElementById(this.options.container);
     // create root svg only when the first slider is added to the container.
     this.rootSVG = document.getElementById("slidersSVG");
@@ -114,6 +113,8 @@ CircularSlider.prototype._initSlideCircle = function() {
     cs.setAttributeNS(null, "r", 10);
     cs.style.stroke = "	#A8A8A8";
     cs.setAttributeNS(null, 'transform', 'rotate(-90)');
+    this.sliderX = 0;
+    this.sliderY = 0;
 
     //console.log("_initEmptyTemplate:", cs);
     return cs;
@@ -142,4 +143,15 @@ CircularSlider.prototype._fillSlider = function() {
 	const fill = this.currentStep * this.stepSize;
 	const empty = this.sliderSize - fill;
 	this.filledCircle.setAttributeNS(null, 'stroke-dasharray', `${fill} ${empty}`);
+	this._positionSliderCircle(fill / this.sliderSize);
+}
+
+CircularSlider.prototype._positionSliderCircle = function(portion) {
+	const radians = portion * 2 * Math.PI;
+	const x =  Math.cos(radians) * (this.options.radius - STROKE_WIDTH / 2);
+	const y =  Math.sin(radians) * (this.options.radius - STROKE_WIDTH / 2);
+	//console.log("[x, y]", x, y);
+
+	this.sliderCircle.setAttributeNS(null, "cx", x);
+	this.sliderCircle.setAttributeNS(null, "cy", y);
 }

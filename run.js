@@ -11,7 +11,7 @@ const sliders = document.getElementById("sliders");
 console.log("sliders", sliders.offsetWidth);
 
 // defined options
-const pcs1 = new OptionsCircularSlider("sliders", "#730099", 0, 1000, 500, 160);
+const pcs1 = new OptionsCircularSlider("sliders", "#730099", 0, 1000, 100, 160); 
 const pcs2 = new OptionsCircularSlider("sliders", "#4d94ff", 0, 100, 1, 130);
 const pcs3 = new OptionsCircularSlider("sliders", "#2eb82e", 0, 100, 25, 100);
 const pcs4 = new OptionsCircularSlider("sliders", "#ffa31a", 0, 300, 10, 70);
@@ -45,3 +45,16 @@ document.getElementById("food-color").style.background = cs2.getColor;
 document.getElementById("insur-color").style.background = cs3.getColor;
 document.getElementById("enter-color").style.background = cs4.getColor;
 document.getElementById("health-color").style.background = cs5.getColor;
+
+// test
+function more() {
+	const stp = cs1.getCurrentStep;
+	cs1.setCurrentStep = stp + 1;
+	document.getElementById("trans-val").innerHTML = cs1.getFormatedValue;
+}
+
+function less() {
+	const stp = cs1.getCurrentStep;
+	cs1.setCurrentStep = stp - 1;
+	document.getElementById("trans-val").innerHTML = cs1.getFormatedValue;
+}
