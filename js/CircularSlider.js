@@ -238,7 +238,6 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 			this.dataUpdate(this.getFormatedValue);
 		}
 	} else {
-		this.setCurrentStep = newStep;
 		this._fillSlider(fillSize);
 	}	
 }
@@ -246,7 +245,8 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 CircularSlider.prototype._handleMouseDown = function(e) {
 	e.preventDefault();
 	this.isDragging = true;
-	this.sliderCircle.setAttributeNS(null, "fill", "#A9A9A9");
+	this.sliderCircle.setAttributeNS(null, "fill", this.getColor);
+
 }
 
 CircularSlider.prototype._cancelMouseDrag = function(e) {
@@ -273,7 +273,6 @@ CircularSlider.prototype._handleMouseMove = function(e) {
 		}
 		this.sliderX = Math.cos(Math.PI / 2) * x - Math.sin(Math.PI / 2) * y;
 		this.sliderY = Math.sin(Math.PI / 2) * x + Math.cos(Math.PI / 2) * y;
-		console.log("[x, y]", Math.floor(this.sliderX), Math.floor(this.sliderY));
 		this._getNewStep(this.sliderX, this.sliderY);
 	}
 }
