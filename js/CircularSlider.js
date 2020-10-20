@@ -77,10 +77,12 @@ CircularSlider.prototype._initSlider = function() {
         this.rootSVG = this._createRootSVG(container);
         container.appendChild(this.rootSVG);
     }
-    this.emptyTemplate = this._initEmptyTemplate()
+    this.emptyTemplateFirst = this._initEmptyTemplateFirst();
+    this.emptyTemplateSecond = this._initEmptyTemplateSecond();
     this.filledCircle = this._initFilledCircle();
     this.sliderCircle = this._initSlideCircle();
-    this.rootSVG.appendChild(this.emptyTemplate);
+    this.rootSVG.appendChild(this.emptyTemplateFirst);
+    this.rootSVG.appendChild(this.emptyTemplateSecond);
     this.rootSVG.appendChild(this.filledCircle);
     this.rootSVG.appendChild(this.sliderCircle);
 }
@@ -108,11 +110,24 @@ CircularSlider.prototype._initCircle = function(r, fill) {
 	return cs;
 }
 
-CircularSlider.prototype._initEmptyTemplate = function() {
+CircularSlider.prototype._initEmptyTemplateFirst = function() {
+    const cs  = this._getTemplateCS();
+    cs.style.strokeOpacity = "0";
+
+    return cs;
+}
+
+CircularSlider.prototype._initEmptyTemplateSecond = function() {
+    const cs = this._getTemplateCS();
+    cs.style.strokeDasharray = "3, 1";
+
+    return cs;
+}
+
+CircularSlider.prototype._getTemplateCS = function() {
     const cs = this._initCircle(this.d, "none");
     cs.style.stroke = "#C8C8C8";
     cs.style.strokeWidth = STROKE_WIDTH + "px";
-    cs.style.strokeDasharray = "4, 0.7";
 
     return cs;
 }
@@ -143,7 +158,6 @@ CircularSlider.prototype._fillSlider = function(fill) {
 	}
 	let oldFill = this.previousStep * this.stepSize;
 	const newFill = this.currentStep * this.stepSize;
-	let rest = this.sliderSize - newFill;
 	const step = this.sliderSize / 500;
 	const isMore = newFill > oldFill;
 	const animation = setInterval(() => {
@@ -179,7 +193,8 @@ CircularSlider.prototype._initHandlers = function() {
 	this.sliderCircle.addEventListener("mousedown", e => this._handleMouseDown(e));
 
 	// click somewhere on slider
-	this.emptyTemplate.addEventListener("click", e => this._filledCircleClicked(e));
+	this.emptyTemplateFirst.addEventListener("click", e => this._filledCircleClicked(e));
+	this.emptyTemplateSecond.addEventListener("click", e => this._filledCircleClicked(e));
 	this.filledCircle.addEventListener("click", e => this._filledCircleClicked(e));
 }
 
@@ -195,7 +210,6 @@ CircularSlider.prototype._filledCircleClicked = function(e) {
 }
 
 CircularSlider.prototype._getNewStep = function(x, y) {
-	console.log("x,y", x, y);
 	const r = this.options.radius;
 	let radians = 0;
 	if (x >= 0 && y >= 0) {
@@ -219,7 +233,6 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 	this.setCurrentStep = newStep;
 	if (!this.isDragging) {
 		this._fillSlider();
-		console.log("step", this.getCurrentStep);
 		// Callback for data legend
 		if (typeof this.dataUpdate === "function") {
 			this.dataUpdate(this.getFormatedValue);
@@ -233,15 +246,15 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 CircularSlider.prototype._handleMouseDown = function(e) {
 	e.preventDefault();
 	this.isDragging = true;
+	this.sliderCircle.setAttributeNS(null, "fill", "#A9A9A9");
 }
 
 CircularSlider.prototype._cancelMouseDrag = function(e) {
 	e.preventDefault();
 	if (this.isDragging) {
 		this.isDragging = false;
-		console.log("LOOOOL");
+		this.sliderCircle.setAttributeNS(null, "fill", "white");
 		this._getNewStep(this.sliderX, this.sliderY);
-		console.log("STEEEEEEP", this.getCurrentStep);
 	}
 	this.isDragging = false;
 }
