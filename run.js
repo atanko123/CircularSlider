@@ -1,3 +1,5 @@
+import { OptionsCircularSlider } from './js/OptionsCircularSlider';
+import { CircularSlider } from './js/CircularSlider';
 /*
 	containter
 	color

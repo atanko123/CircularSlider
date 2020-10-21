@@ -1,4 +1,4 @@
-const OptionsCircularSlider =
+export const OptionsCircularSlider =
 	function(container,
 		     color,
 		     minValue,

@@ -11,7 +11,7 @@ const DOT_SIZE = 8;
 const ANIMATED_STEP = 600;
 const SVG_URL = "http://www.w3.org/2000/svg";
 
-class CircularSlider {
+export class CircularSlider {
 
 	constructor(options, updateData) {
 		this._checkOptions(options);
@@ -206,6 +206,15 @@ CircularSlider.prototype._initHandlers = function() {
 	this.emptyTemplateFirst.addEventListener("click", e => this._filledCircleClicked(e));
 	this.emptyTemplateSecond.addEventListener("click", e => this._filledCircleClicked(e));
 	this.filledCircle.addEventListener("click", e => this._filledCircleClicked(e));
+
+	// touch events
+	container.addEventListener("touchmove", e => this._handleMouseMove(e));
+	container.addEventListener("touchend", e => this._cancelMouseDrag(e));
+    this.sliderCircle.addEventListener("touchstart", e => this._handleMouseDown(e));
+
+    this.emptyTemplateFirst.addEventListener("touchend", e => this._filledCircleClicked(e));
+    this.emptyTemplateSecond.addEventListener("touchend", e => this._filledCircleClicked(e));
+    this.filledCircle.addEventListener("touchend", e => this._filledCircleClicked(e));
 }
 
 CircularSlider.prototype._filledCircleClicked = function(e) {
@@ -213,7 +222,7 @@ CircularSlider.prototype._filledCircleClicked = function(e) {
 	this.previousSize = this.getCurrentStep * this.stepSize;
 	const local = this._transformToLocal(e);
 	const newCoords = this._newCoordinates(local.x, local.y);
-	const newX = newCoords.x;
+    const newX = newCoords.x;
 	const newY = newCoords.y;
 	this._getNewStep(newX, newY);
 }
@@ -225,7 +234,7 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 	const portion = radians / (2 * Math.PI);
 	const size = this.sliderSize * portion;
 	let newStep = size / this.stepSize;
-	
+
 	if (this.isDragging) {
 		newStep = Math.round(newStep);
 		this.previousSize = size;
@@ -274,6 +283,7 @@ CircularSlider.prototype._cancelMouseDrag = function(e) {
 }
 
 CircularSlider.prototype._handleMouseMove = function(e) {
+	console.log("MOVE");
 	e.preventDefault();
 	if (this.isDragging) {
 		const local = this._transformToLocal(e);
@@ -310,8 +320,14 @@ CircularSlider.prototype._between = function(value, os, x) {
 
 CircularSlider.prototype._transformToLocal = function(e) {
 	const svg = this.rootSVG.createSVGPoint();
-    svg.x = e.clientX;
-    svg.y = e.clientY;
+
+	if (e.clientX !== undefined) {
+	    svg.x = e.clientX;
+		svg.y = e.clientY;
+	} else {
+		svg.x = e.changedTouches[0].clientX;
+		svg.y = e.changedTouches[0].clientY;
+	}
 
     return svg.matrixTransform(this.rootSVG.getScreenCTM().inverse());
 }
