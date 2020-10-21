@@ -6,10 +6,6 @@
 	step
 	radius
 */
-
-const sliders = document.getElementById("sliders");
-console.log("sliders", sliders.offsetWidth);
-
 // defined options
 const pcs1 = new OptionsCircularSlider("sliders", "#730099", 0, 1000, 100, 160); 
 const pcs2 = new OptionsCircularSlider("sliders", "#4d94ff", 0, 100, 5, 130);

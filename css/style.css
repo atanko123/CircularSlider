@@ -23,7 +23,7 @@ ul {
 	width: 70%;
 	height: 100%;
 	margin: auto;
-	background-image: linear-gradient( #fafafa, #dedede);
+	background-image: linear-gradient(#fafafa, #C8C8C8);
 	display: flex;
 	font-family: Arial, Helvetica, sans-serif;
 }
