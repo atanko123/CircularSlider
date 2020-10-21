@@ -464,14 +464,12 @@ CircularSlider.prototype._getNewStep = function (x, y) {
   if (isNaN(radians)) return;
   var portion = radians / (2 * Math.PI);
   var size = this.sliderSize * portion;
-  var newStep = size / this.stepSize;
+  var newStep = Math.round(size / this.stepSize);
 
   if (this.isDragging) {
-    newStep = Math.round(newStep);
     this.previousSize = size;
     this.setCurrentStep = newStep;
   } else {
-    newStep = newStep > this.currentStep ? Math.ceil(newStep) : Math.floor(newStep);
     this.setCurrentStep = newStep;
   }
 };
@@ -518,7 +516,6 @@ CircularSlider.prototype._cancelMouseDrag = function (e) {
 };
 
 CircularSlider.prototype._handleMouseMove = function (e) {
-  console.log("MOVE");
   e.preventDefault();
 
   if (this.isDragging) {
