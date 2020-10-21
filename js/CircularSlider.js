@@ -6,8 +6,8 @@
 	step
 	radius
 */
-const STROKE_WIDTH = 15;
-const DOT_SIZE = 10;
+const STROKE_WIDTH = 10;
+const DOT_SIZE = 8;
 const ANIMATED_STEP = 600;
 const SVG_URL = "http://www.w3.org/2000/svg";
 
@@ -38,7 +38,7 @@ class CircularSlider {
 
 	set setCurrentStep(newStep) {
 		// check if newStep is valid
-		if (newStep === this.currentStep || isNaN(newStep)) return;
+		if (isNaN(newStep)) return;
 		const value = newStep * this.options.step + this.options.minValue;
 		if (value > this.options.maxValue) {
 			throw new Error("New step is too big");
@@ -48,6 +48,9 @@ class CircularSlider {
 
 		// Update step value
 		this.currentStep = newStep;
+		if (typeof this.updateData === "function") {
+			this.updateData(this.getValue);
+		}
 		this._fillSlider();
 	}
 }
@@ -222,18 +225,15 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 	const portion = radians / (2 * Math.PI);
 	const size = this.sliderSize * portion;
 	let newStep = size / this.stepSize;
-	newStep = newStep > this.currentStep ?
-		Math.ceil(newStep) : Math.floor(newStep);
-
-	if (!this.isDragging) {
-		this.setCurrentStep = newStep;
-		if (typeof this.updateData === "function") {
-			this.updateData(this.getValue);
-		}
-	} else {
+	
+	if (this.isDragging) {
+		newStep = Math.round(newStep);
 		this.previousSize = size;
-		this.currentStep = newStep;
-		this._fillSlider();
+		this.setCurrentStep = newStep;
+	} else {
+		newStep = newStep > this.currentStep ?
+			Math.ceil(newStep) : Math.floor(newStep);
+		this.setCurrentStep = newStep;
 	}	
 }
 

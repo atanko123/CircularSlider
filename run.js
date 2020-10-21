@@ -7,10 +7,10 @@
 	radius
 */
 // defined options
-const pcs1 = new OptionsCircularSlider("sliders", "#730099", 0, 1000, 100, 160); 
-const pcs2 = new OptionsCircularSlider("sliders", "#4d94ff", 0, 100, 5, 130);
-const pcs3 = new OptionsCircularSlider("sliders", "#2eb82e", 0, 100, 25, 100);
-const pcs4 = new OptionsCircularSlider("sliders", "#ffa31a", 0, 300, 50, 70);
+const pcs1 = new OptionsCircularSlider("sliders", "#730099", 0, 1000, 100, 120); 
+const pcs2 = new OptionsCircularSlider("sliders", "#4d94ff", 0, 100, 5, 100);
+const pcs3 = new OptionsCircularSlider("sliders", "#2eb82e", 0, 100, 25, 80);
+const pcs4 = new OptionsCircularSlider("sliders", "#ffa31a", 0, 300, 50, 60);
 const pcs5 = new OptionsCircularSlider("sliders", "#e62e00", 0, 10, 1, 40);
 
 // Circular sliders defined
