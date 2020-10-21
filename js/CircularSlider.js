@@ -12,10 +12,10 @@ const SVG_URL = "http://www.w3.org/2000/svg";
 
 class CircularSlider {
 
-	constructor(options, dataUpdate) {
+	constructor(options, updateData) {
 		this._checkOptions(options);
 		this.options = options;
-		this.dataUpdate = dataUpdate;
+		this.updateData = updateData;
 
 		this.previousStep = 0;
 		this.currentStep = 0;
@@ -31,9 +31,8 @@ class CircularSlider {
 		return this.currentStep;
 	}
 
-	// $value
-	get getFormatedValue() {
-		return "$" + (this.options.minValue + this.currentStep * this.options.step);
+	get getValue() {
+		return this.options.minValue + this.currentStep * this.options.step;
 	}
 
 	set setCurrentStep(newStep) {
@@ -49,6 +48,7 @@ class CircularSlider {
 		// Update step value
 		this.previousStep = this.currentStep;
 		this.currentStep = newStep;
+		this._fillSlider();
 	}
 }
 
@@ -232,14 +232,14 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 	const fillSize = this.sliderSize * portion;
 	let newStep = fillSize / this.stepSize;
 	newStep = newStep > this.currentStep ? Math.ceil(newStep) : Math.floor(newStep);
-	this.setCurrentStep = newStep;
 	if (!this.isDragging) {
-		this._fillSlider();
+		this.setCurrentStep = newStep;
 		// Callback for data legend
-		if (typeof this.dataUpdate === "function") {
-			this.dataUpdate(this.getFormatedValue);
+		if (typeof this.updateData === "function") {
+			this.updateData(this.getValue);
 		}
 	} else {
+		this.currentStep = newStep;
 		this._fillSlider(fillSize);
 	}	
 }
