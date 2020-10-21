@@ -216,6 +216,28 @@ CircularSlider.prototype._filledCircleClicked = function(e) {
 }
 
 CircularSlider.prototype._getNewStep = function(x, y) {
+	const radians = this._getRadians(x, y);
+	if (isNaN(radians)) return;
+
+	const portion = radians / (2 * Math.PI);
+	const size = this.sliderSize * portion;
+	let newStep = size / this.stepSize;
+	newStep = newStep > this.currentStep ?
+		Math.ceil(newStep) : Math.floor(newStep);
+
+	if (!this.isDragging) {
+		this.setCurrentStep = newStep;
+		if (typeof this.updateData === "function") {
+			this.updateData(this.getValue);
+		}
+	} else {
+		this.previousSize = size;
+		this.currentStep = newStep;
+		this._fillSlider();
+	}	
+}
+
+CircularSlider.prototype._getRadians = function(x, y) {
 	const r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 	let radians = 0;
 	if (x >= 0 && y >= 0) {
@@ -230,25 +252,8 @@ CircularSlider.prototype._getNewStep = function(x, y) {
 		radians += Math.PI * (3 / 2);
 		radians += Math.asin(Math.abs(x) / r);
 	}
-	if (isNaN(radians)) return;
 
-	const portion = radians / (2 * Math.PI);
-	const size = this.sliderSize * portion;
-	let newStep = size / this.stepSize;
-	if (this.isDragging) {
-		this.previousSize = size;
-	}
-	newStep = newStep > this.currentStep ? Math.ceil(newStep) : Math.floor(newStep);
-
-	if (!this.isDragging) {
-		this.setCurrentStep = newStep;
-		if (typeof this.updateData === "function") {
-			this.updateData(this.getValue);
-		}
-	} else {
-		this.currentStep = newStep;
-		this._fillSlider();
-	}	
+	return radians;
 }
 
 CircularSlider.prototype._handleMouseDown = function(e) {
