@@ -210,11 +210,11 @@ CircularSlider.prototype._initHandlers = function() {
 	// touch events
 	container.addEventListener("touchmove", e => this._handleMouseMove(e));
 	container.addEventListener("touchend", e => this._cancelMouseDrag(e));
-    this.sliderCircle.addEventListener("touchstart", e => this._handleMouseDown(e));
+	this.sliderCircle.addEventListener("touchstart", e => this._handleMouseDown(e));
 
-    this.emptyTemplateFirst.addEventListener("touchend", e => this._filledCircleClicked(e));
-    this.emptyTemplateSecond.addEventListener("touchend", e => this._filledCircleClicked(e));
-    this.filledCircle.addEventListener("touchend", e => this._filledCircleClicked(e));
+	this.emptyTemplateFirst.addEventListener("touchend", e => this._filledCircleClicked(e));
+	this.emptyTemplateSecond.addEventListener("touchend", e => this._filledCircleClicked(e));
+	this.filledCircle.addEventListener("touchend", e => this._filledCircleClicked(e));
 }
 
 CircularSlider.prototype._filledCircleClicked = function(e) {
@@ -318,7 +318,7 @@ CircularSlider.prototype._transformToLocal = function(e) {
 	const svg = this.rootSVG.createSVGPoint();
 
 	if (e.clientX !== undefined) {
-	    svg.x = e.clientX;
+		svg.x = e.clientX;
 		svg.y = e.clientY;
 	} else {
 		svg.x = e.changedTouches[0].clientX;
